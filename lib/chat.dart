@@ -1,73 +1,77 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter_app4/drawer.dart';
 import 'package:flutter_app4/massege.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_app4/controller/chat_controller.dart';
+import 'package:get/get.dart';
 
-// ignore: must_be_immutable
-class chat extends StatefulWidget {
-   chat({super.key});
+import 'drawer.dart';
+import 'massege.dart';
 
-  @override
-  State createState(){
-   return _chatState();
-  }
-}
+class Chat extends StatelessWidget {
+  Chat({Key? key}) : super(key: key);
 
-class _chatState extends State {
-List Students=["namil","majed","aboody","yeassen"];
-
-TextEditingController name=TextEditingController();
-int i=0;
-Color c=Color.fromARGB(255, 255, 94, 7);
+  final ChatController chatController = Get.put(ChatController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("عبدالله البردوني"),backgroundColor: Colors.white60,centerTitle: true,),
-   
-     drawer: mydrawer(),
-    body:Column(
-      children: [
-Padding(
-  padding: const EdgeInsets.all(8.0),
-  child: TextField(
-    controller: name,
-
-    decoration: InputDecoration(
-    // label: Text("Name"),
-      labelText: "Name",
-      hintText: "input u name",
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(40))),
-  ),
-),
-  ElevatedButton(style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(c),), onPressed:() {
-   setState(() {
-    
-   }); Students.add(name.text);
-   name.clear();
-    
-  }, child: Text("add student",style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),)),
-        Expanded(
-          child: ListView.builder(
-            itemCount: Students.length,
-            itemBuilder: (context, i) => Card(
-            color:c,
-            child:ListTile(
-            title: Text(Students[i], textAlign: TextAlign.center,style:TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
-              onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) =>massege(),));}
+      appBar: AppBar(
+        title: const Text("عبدالله البردوني"),
+        backgroundColor: Colors.white60,
+        centerTitle: true,
+      ),
+      drawer: const MyDrawer(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: chatController.nameController,
+              decoration: InputDecoration(
+                labelText: "Name",
+                hintText: "input your name",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(40),
+                ),
+              ),
+            ),
           ),
-          ),),
-        )
-        // for (int i=0;i<Students.length;i++)
-        // Card(
-        //   color:c,
-        //   child:ListTile(
-        //   title: Text(Students[i], textAlign: TextAlign.center,style:TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
-        // ),
-        // )
-        
-      ],
-    ) ,
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor:
+                  WidgetStatePropertyAll(chatController.color),
+            ),
+            onPressed: chatController.addStudent,
+            child: const Text(
+              "add student",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: Obx(() => ListView.builder(
+                  itemCount: chatController.students.length,
+                  itemBuilder: (context, i) => Card(
+                    color: chatController.color,
+                    child: ListTile(
+                      title: Text(
+                        chatController.students[i],
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () => Get.to(() => Massege()),
+                    ),
+                  ),
+                )),
+          ),
+        ],
+      ),
     );
   }
 }
